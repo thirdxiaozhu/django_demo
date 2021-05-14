@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.80.0">
+  <title>教师欢迎页</title>
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/jumbotron/">
+
+
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+  <link href="/static/css/welcome.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark ml-auto">
+    {% include 'eas/component/navigation.html'%}
+  </nav>
+
+  <main role="main">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-3">欢迎您！{{ teacher }} 老师</h1>
+        <p></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-6">
+          <h2>我的教籍</h2>
+          <p>查看我的教籍信息</p>
+          <p><a class="btn btn-secondary" href="/teacher/showteacherinfo/" role="button">进入教籍系统 &raquo;</a></p>
+        </div>
+        <div class="col-md-6">
+          <h2>我的课程</h2>
+          <p>查看我的课程信息</p>
+          <p><a class="btn btn-secondary" href="#" role="button">进入课程系统 &raquo;</a></p>
+        </div>
+        <div class="col-md-6">
+          <h2>我的待办</h2>
+          <p>查看我的待办</p>
+          <p><a class="btn btn-secondary" href="#" role="button">进入待办事件 &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+    </div> <!-- /container -->
+
+  </main>
+
+  </footer>
+
+  <script src="/static/js/jquery-3.6.0.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="/static/js/jquery-3.6.0.min.js"><\/script>')</script>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

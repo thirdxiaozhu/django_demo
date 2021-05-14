@@ -1,0 +1,52 @@
+{% extends '1_1/motherbase.html' %}
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% include '1_1/component/panel_title.html' with title='书籍列表' %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="搜索">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">搜索</button>
+                </span>
+            </div>
+            <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>
+        </div>
+        </button>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>id</th>
+            <th>书目</th>
+            <th>出版社</th>
+            <th>价格</th>
+            <th>库存</th>
+            <th>卖出</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in book_list %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.publisher.name }}</td>
+            <td>{{ book.price }}</td>
+            <td>{{ book.kucun }}</td>
+            <td>{{ book.maichu }}</td>
+            <td>
+                <a class="btn btn-danger" href={% url 'delete' 'book' book.id %}>删除</a>
+                <a class="btn btn-info" href="/edit_book/?id={{ book.id }}">编辑</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

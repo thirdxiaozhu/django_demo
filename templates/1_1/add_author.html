@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="https://v3.bootcss.com/favicon.ico">
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="/static/css/dashboard.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <title>添加作者</title>
+    </head>
+    <body>
+        {% include '1_1/component/navigation.html' %}
+        <div class="margin:0.5rem">
+            <div class="container mt-5">
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 m-auto rounded" style="background-color: #ccc">
+
+                        <div class="panel panel-primary">
+                            <h1 class="h2 m-2">添加作者</h1>
+                            <div class="panel-body">
+                                <form class="form-horizontal" action="/add_author/" method="post">
+                                    <div class="form-group">
+                                        <label for="book_title" class="col-sm-2 control-label" name="author_name">姓名</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="author_name" name="author_name" placeholder="作者姓名">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label" for="inputPassword3">出版社</label>
+                                        <div class="col-sm-10">
+                                            <select multiple name="books" class="form-control">
+                                                {% for book in book_list %}
+                                                <option value="{{ book.id }}">{{ book.title }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-offset-2 col-sm-10 ">
+                                        <button type="submit" class="btn btn-success mb-4">提交</button>
+                                        <a href="/book_list/" class="btn btn-danger mb-4">取消</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--结束-->
+                <script src="/static/js/jquery.min.js"></script>
+                <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+                <script src="/static/js/bootstrap.min.js"></script>
+    </body>
+</html>

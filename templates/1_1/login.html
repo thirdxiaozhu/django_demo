@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+    <meta name="author" content="Vincent Garreau"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css"/>
+</head>
+<body>
+
+<div id="particles-js">
+    <div class="login">
+        <div class="login-top">
+            登录
+        </div>
+        <form class="form-horizonal" action="/login/" method="post">
+            {% csrf_token %}
+            <div class="login-center clearfix">
+                <div class="login-center-img"><img src="/static/img/name.png"/></div>
+                <div class="login-center-input">
+                    <input type=":wtext" name="stu_id" value="" placeholder="请输入您的用户名" onfocus="this.placeholder=''"
+                           onblur="this.placeholder='请输入您的用户名'"/>
+                    <div class="login-center-input-text">用户名</div>
+                </div>
+            </div>
+            <div class="login-center clearfix">
+                <div class="login-center-img"><img src="/static/img/password.png"/></div>
+                <div class="login-center-input">
+                    <input type="password" name="password" value="" placeholder="请输入您的密码" onfocus="this.placeholder=''"
+                           onblur="this.placeholder='请输入您的密码'"/>
+                    <div class="login-center-input-text">密码</div>
+                </div>
+            </div>
+            <div class="login-center-checkbox">
+                <div>
+                    <input type="checkbox" name="" value=""/>
+                    <div class="login-center-checkbox-text">记住我</div>
+                    <a id="register" href="/register">注册新账号</a>
+                </div>
+            </div>
+            <div>
+                <a class="login-center-text" href="/change_password/">忘记密码？</a>
+            </div>
+            <div class="login-button-position">
+                <button type="submit" class="login-button">登录</button>
+            </div>
+            <p class="login-text-error">{{ error }}</p>
+        </form>
+    </div>
+    <div class="sk-rotating-plane"></div>
+</div>
+
+<div style="text-align:center;">
+</div>
+</body>
+</html>

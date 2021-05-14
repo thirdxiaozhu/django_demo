@@ -1,0 +1,168 @@
+{% extends 'eas/motherbase.html' %}
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% include 'eas/component/panel_title.html' with title='教室管理' %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" placeholder="搜索教室">
+                <span class="input-group-btn">
+                    <button class="btn btn-info mr-2" type="button" id="searchbtn">搜索</button>
+                </span>
+            </div>
+            <div id="btn">
+            </div>
+            <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>
+        </div>
+        </button>
+    </div>
+</div>
+
+<p>
+    <a class="btn btn-default col-md-12" data-toggle="collapse" href="#collapseExample" role="button"
+        aria-expanded="false" aria-controls="collapseExample">
+        点击进行筛选
+    </a>
+</p>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body">
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
+            <div class="form-group col-md-4">
+                <label for="building">请选择教学楼</label>
+                <select id="inputBuilding" class="form-control">
+                    <option selected value="0">请选择教学楼</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="function">请选择教室类型</label>
+                <select id="inputFunction" class="form-control">
+                    <option selected value="0">请选择教室类型</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCapacity" class="col-form-label">请输入期望容量</label>
+                <input type="text" class="form-control" id="inputCapacity" name="capacity" value="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table" id="student_table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">教室位置</th>
+            <th scope="col">教室容量</th>
+            <th scope="col">教室类型</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+
+    <tbody id="body">
+        {# ajax填充 #}
+        {% for room in classrooms %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ room.name }}</td>
+            <td>{{ room.capacity }}</td>
+            <td>{{ room.function.name }}</td>
+            <td>
+                <a class="btn btn-info" href="/admin/edit_classroom/?id={{ room.id }}">编辑</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/setupajax.js"></script>
+<script>
+    $(function () {
+        // 获取教室类型
+        $.get('/admin/getFunction/', function (data) {
+            for (var i = 0, len = data.functions.length; i < len; i++) {
+                $new = $("<option value=" + data.functions[i][0] + ">" + data.functions[i][1] + "</option>");
+                $("#inputFunction").append($new);
+            }
+        });
+
+        $.get('/admin/getBuilding/', function (data) {
+            for (var i = 0, len = data.buildings.length; i < len; i++) {
+                $new = $("<option value=" + data.buildings[i][0] + ">" + data.buildings[i][1] + "</option>");
+                $("#inputBuilding").append($new);
+            }
+        });
+
+
+        //改变教室类型后
+        $("#inputFunction").change(function () {
+            gochooseroom();
+        })
+
+        $("#inputCapacity").blur(function () {
+            gochooseroom();
+        })
+
+
+        $("#inputBuilding").change(function () {
+            gochooseroom();
+        })
+        
+
+        $("#searchbtn").on("click", function () {
+            var content = $("#search").val();
+            $.ajax({
+                url: '/admin/searchroom/',
+                type: 'get',
+                data: { "content": content },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.capacity + '</td>' + '<td>' + val.function + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+        })
+        
+        function gochooseroom() {
+            var functions = $("#inputFunction").val();
+            var capacity = $("#inputCapacity").val();
+            var building = $("#inputBuilding").val();
+            $.ajax({
+                url: '/admin/getroomlist/',
+                type: 'get',
+                data: { "function_id": functions , "capacity":capacity , "building": building},
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.capacity + '</td>' + '<td>' + val.functions + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_classroom/?id=' + val.id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+            
+        }
+    })
+</script>
+{% endblock %}

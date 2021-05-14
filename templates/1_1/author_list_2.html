@@ -1,0 +1,57 @@
+{% extends '1_1/motherbase.html' %}
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% include '1_1/component/panel_title.html' with title='作者列表' %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">搜索</button>
+            </span>
+        </div>
+        <div class="btn-group mr-2">
+            <a class="btn btn-success pull_right rounded-pill" href="/add_author/">新增</a>
+        </div>
+        </button>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>id</th>
+            <th>名字</th>
+            <th>著作</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for author in author_list %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ author.id }}</td>
+            <td>{{ author.name }}</td>
+            <td>{% for book in author.book.all%}
+                {% if forloop.last %}
+                {{ book.title }}
+                {% else %}
+                {{ book.title }} | 
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {#<a class="btn btn-danger" href="/delete_author/?id={{ author.id }}">删除</a>#}
+                <a class="btn btn-danger" href="{% url 'dela' author.id %}">删除</a>
+                <a class="btn btn-info" href="/edit_author/?id={{ author.id }}">编辑</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    </div> <!--panel-body-->
+    </div><!--panel-primary-->
+
+    {% endblock %}

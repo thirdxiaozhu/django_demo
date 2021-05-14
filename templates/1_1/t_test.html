@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Django模板测试</title>
+</head>
+<body>
+    <p>{{ name1 }}</p>
+    <p>{{ age1 }}</p>
+    <p>{{ name_list }}</p>
+    {% for name in name_list %}
+        <li>{{ name }}</li>
+    {% endfor %}
+    <p>{{ name_dict }}</p>
+    <p>{{ name_dict.first_name }}</p>
+    <p>{{ name_dict.last_name }}</p>
+    <p>{{ person1.name }} ||| {{ person1.age }} ||| {{ person1.dream }}</p>
+    <p>{{ bucunzai|default:"nothing" }}</p>
+    <p>{{ name1 }} - {{ name1|length }}</p>
+    <p>文件大小：{{ file_size|filesizeformat }}</p>
+    <p>列表切片{{ name_list|slice:"1:-1"}}</p>
+    <!--对字典的值进行切片-->
+    <p>字符串切片{{ name_dict.last_name|slice:"1:-1"}}</p>
+    <p>时间格式化 {{ now|date:"Y-m-d H:i:s" }}</p>
+    <p>a标签 {{ a_html|safe }}</p>
+    <p>自定义的filter方法</p>
+    {% load myfilter %}
+    {{ name1|sb }}
+    {{ name1|add_two:"真SB" }}
+
+    <p>for循环</p>
+    <ul>
+        {% for name in name_list %}
+        <li class="{% if forloop.first %}'sb'{% endif %}">{{ forloop.counter }} - {{ name }}</li>
+        {% endfor %}
+    </ul>
+    <hr>
+    {% if name_list|length >= 3%}
+        <p>需要打两辆车</p>
+    {% else%}
+        <p>需要打一辆车</p>
+    {% endif %}
+
+    <hr>
+    {% with name=name_list_2.1.1 %}
+        {{ name }}
+    {% endwith %}
+    
+    {% load mysimpletag %}
+    <hr>
+    {% show_results 10 %}   
+</body>
+</html>

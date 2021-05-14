@@ -1,0 +1,4 @@
+insert into adminstrator_studentinfo(stu_id,password,name,birthday,IDnumber,sex ,grade, outlook_id, nation, native_id, Class_id , entrytime) values ("190146841","123456","邹嘉旭",'2001-06-13',"220106200106139416","男",2,3,1,64,2,"2019-08-25");
+insert into adminstrator_studentinfo(stu_id,password,name,birthday,IDnumber,sex ,grade, outlook_id, nation, native_id, Class_id , entrytime) values ("190342209","123456","金泽萱",'2000-06-12',"123456789123456789","男",2,3,1,356,2,"2019-08-25");
+insert into adminstrator_studentinfo(stu_id,password,name,birthday,IDnumber,sex ,grade, outlook_id, nation, native_id, Class_id , entrytime) values ("190342205","123456","郭江鑫",'2000-01-01',"123456789123456789","男",2,3,1,386,2,"2019-08-25");
+

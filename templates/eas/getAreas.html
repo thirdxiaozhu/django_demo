@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>省市县菜单</title>
+        <script src="/static/js/jquery-3.6.0.min.js"></script>
+
+    </head>
+    <body>
+        <select id="country" name="country" >
+            <option value="">请选择国家</option>
+        </select>
+        <select id="province" name="province">
+            <option value="">请选择省份</option>
+        </select>
+        <select id="city" name="city">
+            <option value="">请选择城市</option>
+        </select>
+    </body>
+    <script>
+        $(function(){
+
+            // 获取国家
+                $.get('/admin/getCountry/', function (data) {
+                    for (var i = 0, len = data.countries.length; i < len; i++) {
+                        $new = $("<option value=" + data.countries[i][0] + ">" + data.countries[i][1] + "</option>");
+                        $("#country").append($new);
+                    }
+                }).done(function(data){
+                });
+
+
+            $(document).ready(function(){
+                $("#country").val(1);
+            });
+/*             $.get('/admin/getCountry/',function(data){
+                for(var i = 0,len = data.countries.length; i<len ;i++){
+                    $new = $("<option value="+data.countries[i][0] +">"+  data.countries[i][1]  +"</option>" );
+                    $("#country").append( $new );
+                }
+            }); */
+
+
+            //改变省份后
+            $("#country").change(function(){
+                //清空市和区
+                $("#province").empty().append('<option value="">请选择省份</option>');
+                $("#city").empty().append('<option value="">请选择城市</option>');
+                $.ajax({
+                    url:'/admin/getProvince/',
+                    type:'get',
+
+                    data:{"country_id":$(this).val()},
+                }).done(function(data){
+                    for(var i = 0,len = data.provinces.length; i<len ;i++){
+                        $new = $( "<option value="+data.provinces[i][0] +">"+  data.provinces[i][1]  +"</option>" );
+                        $("#province").append( $new );
+                    }
+                });
+            });
+
+            //改变城市后
+            $("#province").change(function(){
+                //清空市和区
+                $("#city").empty().append('<option value="">请选择城市</option>');
+                $.ajax({
+                    url:'/admin/getCity/',
+                    type:'get',
+                    data:{"province_id":$(this).val()}
+                }).done(function(data){
+                    for(var i = 0,len = data.cities.length; i<len ;i++){
+                        $new = $( "<option value="+data.cities[i][0] +">"+  data.cities[i][1]  +"</option>" );
+                        $("#city").append($new );
+                    }
+                });
+            });
+
+        })
+    </script>
+</html>

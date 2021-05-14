@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% csrf_token %}
+    <input type="text" id="i1">+
+    <input type="text" id="i2">=
+    <input type="text" id="i3">
+    <input type="button" value="AJAX提交" id="b1">
+    <input type="button" value="百度" id="b2">
+    <input type="button" value="AJAX POST" id="b3">
+
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/setupajax.js"></script>
+    <script>
+        $("#b1").on("click", function() {
+            $.ajax({
+                /*往哪发*/
+                url:"/ajax_add/",
+                /*怎么发*/
+                type: "GET",
+                /*发什么*/
+                data: {"i1":$("#i1").val() , "i2":$("#i2").val()},
+                success: function(arg){
+                    /*返回一个结果*/
+                    $("#i3").val(arg);
+                }
+            })
+        })
+
+        $("#b2").on("click", function(){
+            $.ajax({
+                url: "/ajax_img/",
+                type: "GET",
+                success: function(a) {
+                    location.href = a;
+/*                     //在页面上创建一个标签
+                    var imgEle = document.createElement("img");
+                    imgEle.src = a;
+                    //把创建的img标签添加到文档中
+                    $("#b2").after(imgEle); */
+                }
+            })
+        })
+        $("#b3").on("click", function() {
+            var i1 = $("#i1").val();
+            var i2 = $("#i2").val();
+            //找到页面上的csrf标签
+            //var csrfToken = $("[name = 'csrfmiddlewaretoken']").val();
+            $.ajax({
+                url:"/ajax_add_2/",
+                type: "POST",
+                //data: {"i1": i1, "i2": i2 , "csrfmiddlewaretoken": csrfToken},
+                data: {"i1": i1, "i2": i2},
+                success: function(arg){
+                    $("#i3").val(arg);
+                }
+            })
+        })
+    </script>
+</body>
+</html>

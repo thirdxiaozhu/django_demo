@@ -1,0 +1,169 @@
+{% extends 'eas/motherbase.html' %}
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% include 'eas/component/panel_title.html' with title='学籍管理' %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" placeholder="通过姓名或学号搜索">
+                <span class="input-group-btn">
+                    <button class="btn btn-info mr-2" type="button" id="searchbtn">搜索</button>
+                </span>
+            </div>
+            <div id="btn">
+            </div>
+<!--             <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>-->
+        </div>
+        </button>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="form-group col-md-4">
+        <label for="College">请选择学院</label>
+        <select id="inputCollege" class="form-control">
+            <option selected value="">请选择学院</option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputMajor">请选择专业</label>
+        <select id="inputMajor" class="form-control">
+            <option selected value="">请选择专业</option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputClass">请选择班级</label>
+        <select id="inputClass" class="form-control">
+            <option selected value="">请选择班级</option>
+        </select>
+    </div>
+</div>
+
+<table class="table" id="student_table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">学号</th>
+            <th scope="col">姓名</th>
+            <th scope="col">所在班级</th>
+            <th scope="col">性别</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+
+    <tbody id="body">
+        {# ajax填充 #}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block js%}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/setupajax.js"></script>
+<script>
+    $(function () {
+
+        // 获取学院
+        $.get('/admin/getCollege/', function (data) {
+            for (var i = 0, len = data.colleges.length; i < len; i++) {
+                $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
+                $("#inputCollege").append($new);
+            }
+        });
+
+
+        //改变学院后
+        $("#inputCollege").change(function () {
+            //清空专业和班级
+            $("#inputMajor").empty().append('<option value="">请选择专业</option>');
+            $("#inputClass").empty().append('<option value="">请选择班级</option>');
+            $.ajax({
+                url: '/admin/getMajor/',
+                type: 'get',
+
+                data: { "college_id": $(this).val() }
+            }).done(function (data) {
+                for (var i = 0, len = data.majors.length; i < len; i++) {
+                    $new = $("<option value=" + data.majors[i][0] + ">" + data.majors[i][1] + "</option>");
+                    $("#inputMajor").append($new);
+                }
+            });
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        });
+
+        //改变专业后
+        $("#inputMajor").change(function () {
+            //清空班级
+            $("#inputClass").empty().append('<option value="">请选择班级</option>');
+            $.ajax({
+                url: '/admin/getClass/',
+                type: 'get',
+                data: { "major_id": $(this).val() }
+            }).done(function (data) {
+                for (var i = 0, len = data.classes.length; i < len; i++) {
+                    $new = $("<option value=" + data.classes[i][0] + ">" + data.classes[i][1] + "</option>");
+                    $("#inputClass").append($new);
+                }
+            });
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        });
+
+        //改变班级后
+        $("#inputClass").change(function () {
+            var college_id = $("#inputCollege").val();
+            var major_id = $("#inputMajor").val();
+            var class_id = $("#inputClass").val();
+            var but = $('#btn');
+            $.ajax({
+                url: '/admin/showstudents/',
+                type: 'get',
+                data: { "college_id": college_id, "major_id": major_id, "class_id": class_id },
+                success: function (data) {
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    but.append('<a class="btn btn-success pull_right rounded-pill" href="/admin/add_student/?id='+ class_id + '">新增</a>');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        })
+
+        $("#searchbtn").on("click", function () {
+            var content = $("#search").val();
+            $.ajax({
+                url: '/admin/searchstatu/',
+                type: 'get',
+                data: { "content": content },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock %}

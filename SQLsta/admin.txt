@@ -1,0 +1,1 @@
+insert into adminstrator_function(name) values ("ordinary"),("opc"),("exper");

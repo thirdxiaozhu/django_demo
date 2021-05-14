@@ -1,0 +1,206 @@
+{% extends 'eas/motherbase.html' %}
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% include 'eas/component/panel_title.html' with title='课程管理' %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" placeholder="通过课程号或课程名搜索">
+                <span class="input-group-btn">
+                    <button class="btn btn-info mr-2" type="button" id="searchbtn">搜索</button>
+                </span>
+            </div>
+            <div id="btn">
+            </div>
+            <a class="btn btn-success pull_right rounded-pill" href="/admin/add_teacher/">新增</a>
+<!--             <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>-->
+        </div>
+        </button>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="form-group col-md-4">
+        <label for="College">请选择学院</label>
+        <select id="inputCollege" class="form-control">
+            <option selected value="0">请选择学院</option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputFunction">请选择课程类型</label>
+        <select id="inputFunction" class="form-control">
+            <option selected value="0">请选择课程类型</option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputElective">是否选修</label>
+        <select id="inputElective" class="form-control">
+            <option selected value="0">请选择课程类型</option>
+            <option value="True">是</option>
+            <option value="False">否</option>
+        </select>
+    </div>
+</div>
+
+<table class="table" id="student_table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">课程号</th>
+            <th scope="col">课程名称</th>
+            <th scope="col">总学时</th>
+            <th scope="col">开课学院</th>
+            <th scope="col">课程类型</th>
+            <th scope="col">是否选修</th>
+            <th scope="col">操作</th>
+        </tr>
+    </thead>
+
+    <tbody id="body">
+        {# ajax填充 #}
+        {% for course in courses %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ course.cou_id }}</td>
+            <td>{{ course.name }}</td>
+            <td>{{ course.classhour }}</td>
+            <td>{{ course.college.name }}</td>
+            <td>{{ course.function.name }}</td>
+            <td>{% if course.elective == False%} 否 {% endif %}</td>
+            <td>
+                <a class="btn btn-info" href="/admin/edit_teacher/?id={{ teacher.id }}">编辑</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block js%}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/setupajax.js"></script>
+<script>
+    $(function () {
+
+        // 获取学院
+        $.get('/admin/getTeacherCollege/', function (data) {
+            for (var i = 0, len = data.colleges.length; i < len; i++) {
+                $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
+                $("#inputCollege").append($new);
+            }
+        });
+        $.get('/admin/getFunction/', function (data) {
+            for (var i = 0, len = data.functions.length; i < len; i++) {
+                $new = $("<option value=" + data.functions[i][0] + ">" + data.functions[i][1] + "</option>");
+                $("#inputFunction").append($new);
+            }
+        });
+
+
+        //改变学院后
+        $("#inputCollege").change(function () {
+            $.ajax({
+                url: '/admin/getselcourse/',
+                type: 'get',
+                data: { "college_id": $("#inputCollege").val(), "function_id":$("#inputFunction").val() ,"elective":$("#inputElective").val() },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.cou_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.classhour + '</td>' + '<td>' + val.college+ '</td>' + '<td>' + val.function+ '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_course/?id=' + val.id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            });
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        });
+
+        //改变学院后
+        $("#inputFunction").change(function () {
+            $.ajax({
+                url: '/admin/getselcourse/',
+                type: 'get',
+                data: { "college_id": $("#inputCollege").val(), "function_id":$("#inputFunction").val() ,"elective":$("#inputElective").val() },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.cou_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.classhour + '</td>' + '<td>' + val.college+ '</td>' + '<td>' + val.function+ '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_course/?id=' + val.id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            });
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        });
+
+
+        //改变学院后
+        $("#inputElective").change(function () {
+            $.ajax({
+                url: '/admin/getselcourse/',
+                type: 'get',
+                data: { "college_id": $("#inputCollege").val(), "function_id":$("#inputFunction").val() ,"elective":$("#inputElective").val() },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.cou_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.classhour + '</td>' + '<td>' + val.college+ '</td>' + '<td>' + val.function+ '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_course/?id=' + val.id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            });
+            $('#student_table tbody').html('');
+            $('#btn').html('');
+        });
+
+
+        $("#searchbtn").on("click", function () {
+            var content = $("#search").val();
+            $.ajax({
+                url: '/admin/searchstatu/',
+                type: 'get',
+                data: { "content": content },
+                success: function (data) {
+                    $('#student_table tbody').html('');
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1;
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock %}

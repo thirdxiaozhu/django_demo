@@ -550,6 +550,7 @@ def add_teacher(request):
 
 
 def delete_teacher(request):
+    print("helloworld")
     tea_id = request.GET.get("id")
     models.TeacherInfo.objects.get(tea_id=tea_id).delete()
     return redirect("/admin/teacherlist/")

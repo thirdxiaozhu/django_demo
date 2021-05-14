@@ -6,4 +6,6 @@ from student import views
 urlpatterns = [
     path('index/',views.index),
     path('showstatu/',views.showstatu),
+    path('changepwd/',views.changepwd),
+    path('sendbox/',views.sendbox),
 ]

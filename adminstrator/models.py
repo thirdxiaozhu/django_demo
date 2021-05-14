@@ -220,8 +220,13 @@ class Message(models.Model):
     student = models.ForeignKey(to="StudentInfo", on_delete=models.CASCADE , null=True)
     teacher = models.ForeignKey(to="TeacherInfo", on_delete=models.CASCADE , null=True)
     admin = models.ForeignKey(to="AdminInfo", on_delete=models.CASCADE , null=True)
+    fromwho = models.CharField(max_length=30, default="none")
     title = models.CharField(max_length=50)
-    content = models.CharField(max_length=1000)
-    gettime = models.DateField(default=timezone.now)
-    finishtime = models.DateField(default=timezone.now)
-    isFinished = models.BooleanField(default=False)
+    content = models.CharField(max_length=1000 , null=True)
+    gettime = models.DateTimeField(default=timezone.now)
+    finishtime = models.DateTimeField(default=timezone.now)
+    isFinished = models.IntegerField(default=0)
+    result= models.CharField(max_length=30, default="none")
+
+    class Meta:
+        ordering = ['-isFinished', ['-gettime'],['-finishtie']]

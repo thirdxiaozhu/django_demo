@@ -53,4 +53,6 @@ urlpatterns = [
     path('getteacher/', views.getteacher),
     path('getselcourse/', views.getselcourse),
     path('getteacou/', views.getteacou),
+    path('receivebox/', views.receivebox),
+    path('filremessage/', views.filremessage, name="fil"),
 ]

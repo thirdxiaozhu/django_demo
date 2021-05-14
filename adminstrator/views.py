@@ -250,7 +250,7 @@ def searchroom(request):
     for i in classrooms:
         #res.append([i.stu_id, i.name]) #键值对传Json
         data = {
-            'id':i.id,
+            'id': i.id,
             'name': i.name,
             'capacity': i.capacity,
             'function': i.function.name,
@@ -327,19 +327,20 @@ def getroomlist(request):
     elif capacity == "" and building == "0":
         classrooms = models.ClassRoom.objects.filter(Q(function_id=function))
     elif building == "0" and function == "0":
-        classrooms = models.ClassRoom.objects.filter(Q(capacity__gt=int(capacity)-1))
+        classrooms = models.ClassRoom.objects.filter(
+            Q(capacity__gt=int(capacity)-1))
     elif capacity == "":
         classrooms = models.ClassRoom.objects.filter(
-            Q(building_id = building) & Q(function_id=function))
+            Q(building_id=building) & Q(function_id=function))
     elif function == "0":
         classrooms = models.ClassRoom.objects.filter(
-            Q(building_id = building) & Q(capacity__gt=int(capacity)-1))
+            Q(building_id=building) & Q(capacity__gt=int(capacity)-1))
     elif building == "0":
         classrooms = models.ClassRoom.objects.filter(
-            Q(function_id = function) & Q(capacity__gt=int(capacity)-1))
+            Q(function_id=function) & Q(capacity__gt=int(capacity)-1))
     else:
         classrooms = models.ClassRoom.objects.filter(
-            Q(capacity__gt=int(capacity)-1) & Q(function_id=function) & Q(building_id = building))
+            Q(capacity__gt=int(capacity)-1) & Q(function_id=function) & Q(building_id=building))
     print(classrooms)
     res = []
     for i in classrooms:
@@ -553,3 +554,38 @@ def delete_teacher(request):
     tea_id = request.GET.get("id")
     models.TeacherInfo.objects.get(tea_id=tea_id).delete()
     return redirect("/admin/teacherlist/")
+
+
+def receivebox(request):
+    remessages = models.Message.objects.filter(
+        Q(admin_id="1") & ~Q(fromwho="admin")).order_by('isFinished','-gettime')
+    #print(remessages[1].student.name)
+    return render(request, "eas/admin/admin_receivebox.html", {'remessages': remessages})
+
+
+def filremessage(request):
+    startdate = request.POST.get("startdate")
+    enddate = request.POST.get("enddate")
+    #传入的enddate是指向该日期的00：00：00,如果要按照常规逻辑需要把该字符串日期转换成日期格式并+1
+    #通过保存一个备份，最后再返回一个备份过的enddate值，这样就能在前端正常显示了
+    enddate_backup = enddate
+    if startdate == "" and enddate == "":
+        remessages = models.Message.objects.filter(
+            Q(admin_id="1") & ~Q(fromwho="admin")).order_by('isFinished','-gettime')
+    elif startdate == "":
+        enddate = datetime.datetime.strptime(enddate,'%Y-%m-%d') + datetime.timedelta(days=1)
+        remessages = models.Message.objects.filter(Q(admin_id="1") & ~Q(fromwho="admin") & Q(gettime__lte=enddate)).order_by('isFinished','-gettime')
+        enddate = enddate_backup
+    elif enddate == "":
+        remessages = models.Message.objects.filter(Q(admin_id="1") & ~Q(fromwho="admin") & Q(gettime__gte=startdate)).order_by('isFinished','-gettime')
+        print(remessages)
+    else:
+        enddate = datetime.datetime.strptime(enddate,'%Y-%m-%d') + datetime.timedelta(days=1)
+        remessages = models.Message.objects.filter(Q(admin_id="1") & ~Q(fromwho="admin") & Q(gettime__gte=startdate) & Q(gettime__lte=enddate)).order_by('isFinished','-gettime')
+        enddate = enddate_backup
+
+    return render(request, "eas/admin/admin_receivebox.html", {
+        'remessages': remessages,
+        'startdate':startdate,
+        'enddate':enddate,
+        })

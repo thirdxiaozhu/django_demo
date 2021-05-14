@@ -1,8 +1,13 @@
-{% extends 'eas/motherbase.html' %}
+{% extends 'eas/component/motherbase4stu.html' %}
+
+{% block head %}
+<link href="https://cdn.bootcss.com/gijgo/1.9.13/combined/css/gijgo.min.css" rel="stylesheet">
+{% endblock %}
+
 
 {% block page-main %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    {% include 'eas/component/panel_title.html' with title='教室管理' %}
+    {% include 'eas/component/panel_title.html' with title='已发送的消息' %}
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
             <div class="input-group">
@@ -13,7 +18,7 @@
             </div>
             <div id="btn">
             </div>
-            <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>
+            <a class="btn btn-success pull_right rounded-pill" href="/add_book/">发送新消息</a>
         </div>
         </button>
     </div>
@@ -29,21 +34,17 @@
     <div class="card card-body">
         <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
-            <div class="form-group col-md-4">
-                <label for="building">请选择教学楼</label>
-                <select id="inputBuilding" class="form-control">
-                    <option selected value="0">请选择教学楼</option>
-                </select>
+            <div class="form-group col-md-6">
+                <label for="inputStartdate" class="col-sm-2 col-form-label">起始日期</label>
+                <div class="col-sm-12">
+                    <input id="startdate" class="col-12" name="startdate" value="">
+                </div>
             </div>
-            <div class="form-group col-md-4">
-                <label for="function">请选择教室类型</label>
-                <select id="inputFunction" class="form-control">
-                    <option selected value="0">请选择教室类型</option>
-                </select>
-            </div>
-            <div class="form-group col-md-4">
-                <label for="inputCapacity" class="col-form-label">请输入期望容量</label>
-                <input type="text" class="form-control" id="inputCapacity" name="capacity" value="">
+            <div class="form-group col-md-6">
+                <label for="inputEnddate" class="col-sm-2 col-form-label">截止日期</label>
+                <div class="col-sm-12">
+                    <input id="enddate" class="col-12" name="enddate" value="">
+                </div>
             </div>
         </div>
     </div>
@@ -53,24 +54,35 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">教室位置</th>
-            <th scope="col">教室容量</th>
-            <th scope="col">教室类型</th>
+            <th scope="col">是否已完成</th>
+            <th scope="col">收件人</th>
+            <th scope="col">标题</th>
+            <th scope="col">发起时间</th>
+            <th scope="col">完成时间</th>
             <th scope="col">操作</th>
         </tr>
     </thead>
 
     <tbody id="body">
-        {# ajax填充 #}
-        {% for room in classrooms %}
+        {% for message in messages %}
 
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ room.name }}</td>
-            <td>{{ room.capacity }}</td>
-            <td>{{ room.function.name }}</td>
+            {% if message.isFinished == 0 %}
+                <td class="text-danger"> 否 </td>
+            {% else %} 
+                <td class="text-success"> 是 </td>
+            {% endif %} 
+            {% if message.admin_id == 1 %}
+                <td> admin </td>
+            {% else %} 
+                <td> {{ message.teacher_id.name }} </td>
+            {% endif %} 
+            <td>{{ message.title }}</td>
+            <td>{{ message.gettime }}</td>
+            <td scope="row">{% if message.isFinished == 0 %} - {% else %} {{message.finishtime}} {% endif %}</td>
             <td>
-                <a class="btn btn-info" href="/admin/edit_classroom/?id={{ room.id }}">编辑</a>
+                <a class="btn btn-info" href="/student/delete_message/?id={{ message.id }}">删除此条</a>
             </td>
         </tr>
         {% endfor %}
@@ -81,6 +93,21 @@
 
 {% block js %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.15.0/esm/popper.min.js"></script>
+<script src="/static/gijgo/js/gijgo.min.js"></script>
+<script src="/static/gijgo/js/messages/messages.zh-cn.min.js"></script>
+<script>
+    $("#startdate").datepicker({
+        locale: 'zh-cn',
+        format: 'yyyy-mm-dd',
+        weekStartDay: 1
+    });
+    $("#enddate").datepicker({
+        locale: 'zh-cn',
+        format: 'yyyy-mm-dd',
+        weekStartDay: 1
+    });
+</script>
 <script src="/static/js/setupajax.js"></script>
 <script>
     $(function () {

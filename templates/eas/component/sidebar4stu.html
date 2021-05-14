@@ -2,7 +2,7 @@
     <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {% if stu %} active {% endif %}" href="/admin/status/">
+                <a class="nav-link {% if stu %} active {% endif %}" href="/student/showstatu/">
                     <span data-feather="home"></span>
                     我的学籍 <span class="sr-only">(current)</span>
                 </a>
@@ -23,9 +23,13 @@
         </h6>
         <ul class="nav flex-column mb-2">
             <li class="nav-item">
+                <a class="nav-link  {% if messages %} active {% endif %}" href="/student/sendbox/">
+                    <span data-feather="file-text"></span>
+                    已发送
+                </a>
                 <a class="nav-link" href="#">
                     <span data-feather="file-text"></span>
-                    收到的消息
+                    收信箱
                 </a>
                 <a class="nav-link" href="#">
                     <span data-feather="file-text"></span>

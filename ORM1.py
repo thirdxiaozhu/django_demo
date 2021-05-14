@@ -3,12 +3,16 @@
 """
 
 import os
+from django.utils import timezone
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_demo.settings')
     import django
     django.setup()
 
+
+print(timezone.now())
+"""
 #    from app01 import models
     from adminstrator import models
     from django.db.models import Avg,Sum,Max,Min,Count
@@ -19,7 +23,6 @@ if __name__ == '__main__':
         i.function_id = 1
         i.save()
     print(ret)
-"""
     import json
     #属性名一定用双引号!!!!
     s = '{"name" : "zoujiaxv" , "age" : 18}'

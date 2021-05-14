@@ -1,3 +1,4 @@
+from django.db.models.base import ModelStateFieldsCacheDescriptor
 from django.shortcuts import render , HttpResponse , redirect
 from django.urls import path
 from django.contrib.auth import authenticate
@@ -32,3 +33,15 @@ def showstatu(request):
         "province": stu_province,
         "country": stu_country})
     
+
+def changepwd(request):
+    student = adm_mod.StudentInfo.objects.get(stu_id=request.session.get('userid'))
+    new_message = adm_mod.Message.objects.create(student_id = student.id,title="修改密码申请", admin_id=1 , fromwho="student")
+
+    return HttpResponse("申请已成功提交")
+
+    
+def sendbox(request):
+    student = adm_mod.StudentInfo.objects.get(stu_id=request.session.get('userid'))
+    messages = adm_mod.Message.objects.filter(student_id = student.id).order_by('-isFinished')
+    return render(request, "eas/student/student_sendbox.html",{'messages':messages})

@@ -12,8 +12,6 @@
         <a class="btn btn-info pull_right rounded-pill" href="/student/index/">返回</a>
     </div>
 </div>
-
-<form action="/admin/edit_student/" method="post">
     {% csrf_token %}
     <input type="text" style="display: none" name="id" value="{{ stu.id }}">
     <div class="form-group row">
@@ -29,7 +27,7 @@
         <div class="col-sm-6">
             <input type="password" class="form-control" id="password" name="passwd" value="{{ stu.password }}" disabled>
         </div>
-        <a class="btn btn-success pull_right" href="/student/index/">申请修改</a>
+        <button id="changepwd" class="btn btn-success pull_right">申请修改</button>
     </div>
     <div class="form-group row">
         <label for="inputName" class="col-sm-2 col-form-label">姓名</label>
@@ -195,6 +193,17 @@
 <script src="/static/js/setupajax.js"></script>
 <script>
     $(function () {
+
+        $("#changepwd").on("click", function () {
+            $.ajax({
+                url: '/student/changepwd/',
+                type: 'get',
+                success: function (data) {
+                    alert(data);
+                }
+            })            
+        })
+
 
         // 获取学院
         $.get('/admin/getCollege/', function (data) {

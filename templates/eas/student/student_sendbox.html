@@ -32,21 +32,24 @@
 </p>
 <div class="collapse" id="collapseExample">
     <div class="card card-body">
+        <form action="/student/filmessage/" method="post">
         <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
-            <div class="form-group col-md-6">
-                <label for="inputStartdate" class="col-sm-2 col-form-label">起始日期</label>
+            <div class="form-group col-md-5">
+                <label for="inputStartdate" class="col-sm-3 col-form-label">起始日期</label>
                 <div class="col-sm-12">
-                    <input id="startdate" class="col-12" name="startdate" value="">
+                    <input id="startdate" class="col-12" name="startdate" value="{{ startdate }}">
                 </div>
             </div>
-            <div class="form-group col-md-6">
-                <label for="inputEnddate" class="col-sm-2 col-form-label">截止日期</label>
+            <div class="form-group col-md-5">
+                <label for="inputEnddate" class="col-sm-3 col-form-label">截止日期</label>
                 <div class="col-sm-12">
-                    <input id="enddate" class="col-12" name="enddate" value="">
+                    <input id="enddate" class="col-12" name="enddate" value="{{ enddate }}">
                 </div>
             </div>
+             <button type="submit" class="btn btn-success pull_right rounded-pill">确定</button>
         </div>
+        </form>
     </div>
 </div>
 
@@ -54,10 +57,11 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">是否已完成</th>
             <th scope="col">收件人</th>
             <th scope="col">标题</th>
             <th scope="col">发起时间</th>
+            <th scope="col">是否已完成</th>
+            <th scope="col">处理结果</th>
             <th scope="col">完成时间</th>
             <th scope="col">操作</th>
         </tr>
@@ -68,11 +72,6 @@
 
         <tr>
             <td>{{ forloop.counter }}</td>
-            {% if message.isFinished == 0 %}
-                <td class="text-danger"> 否 </td>
-            {% else %} 
-                <td class="text-success"> 是 </td>
-            {% endif %} 
             {% if message.admin_id == 1 %}
                 <td> admin </td>
             {% else %} 
@@ -80,9 +79,21 @@
             {% endif %} 
             <td>{{ message.title }}</td>
             <td>{{ message.gettime }}</td>
-            <td scope="row">{% if message.isFinished == 0 %} - {% else %} {{message.finishtime}} {% endif %}</td>
+            {% if message.isFinished == 0 %}
+                <td class="text-danger"> 否 </td>
+                <td> - </td>
+                <td> - </td>
+            {% else %} 
+                <td class="text-success"> 是 </td>
+                {% if message.result == "驳回"%}
+                    <td class="text-danger">{{ message.result }}</td>
+                {% else %}
+                    <td class="text-success">{{ message.result }}</td>
+                {% endif %}
+                <td> {{ message.finishtime }} </td>
+            {% endif %} 
             <td>
-                <a class="btn btn-info" href="/student/delete_message/?id={{ message.id }}">删除此条</a>
+                <a class="btn btn-info" href="/student/show_message/?id={{ message.id }}">查看详情</a>
             </td>
         </tr>
         {% endfor %}
@@ -109,87 +120,4 @@
     });
 </script>
 <script src="/static/js/setupajax.js"></script>
-<script>
-    $(function () {
-        // 获取教室类型
-        $.get('/admin/getFunction/', function (data) {
-            for (var i = 0, len = data.functions.length; i < len; i++) {
-                $new = $("<option value=" + data.functions[i][0] + ">" + data.functions[i][1] + "</option>");
-                $("#inputFunction").append($new);
-            }
-        });
-
-        $.get('/admin/getBuilding/', function (data) {
-            for (var i = 0, len = data.buildings.length; i < len; i++) {
-                $new = $("<option value=" + data.buildings[i][0] + ">" + data.buildings[i][1] + "</option>");
-                $("#inputBuilding").append($new);
-            }
-        });
-
-
-        //改变教室类型后
-        $("#inputFunction").change(function () {
-            gochooseroom();
-        })
-
-        $("#inputCapacity").blur(function () {
-            gochooseroom();
-        })
-
-
-        $("#inputBuilding").change(function () {
-            gochooseroom();
-        })
-        
-
-        $("#searchbtn").on("click", function () {
-            var content = $("#search").val();
-            $.ajax({
-                url: '/admin/searchroom/',
-                type: 'get',
-                data: { "content": content },
-                success: function (data) {
-                    $('#student_table tbody').html('');
-                    var obj = eval(data);
-                    var tbody = $('#body');
-                    $(obj).each(function (index) {
-                        var val = obj[index];
-                        var count = index + 1;
-                        //alert(val.name);
-                        var tr = $('<tr></tr>');
-                        tr.append('<td>' + count + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.capacity + '</td>' + '<td>' + val.function + '</td>');
-                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.id + '">编辑</a>' + '</td>');
-                        tbody.append(tr);
-                    });
-                }
-            })
-        })
-        
-        function gochooseroom() {
-            var functions = $("#inputFunction").val();
-            var capacity = $("#inputCapacity").val();
-            var building = $("#inputBuilding").val();
-            $.ajax({
-                url: '/admin/getroomlist/',
-                type: 'get',
-                data: { "function_id": functions , "capacity":capacity , "building": building},
-                success: function (data) {
-                    $('#student_table tbody').html('');
-                    var obj = eval(data);
-                    var tbody = $('#body');
-                    $(obj).each(function (index) {
-                        var val = obj[index];
-                        var count = index + 1
-                        //alert(val.name);
-                        var tr = $('<tr></tr>');
-                        tr.append('<td>' + count + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.capacity + '</td>' + '<td>' + val.functions + '</td>');
-                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_classroom/?id=' + val.id + '">编辑</a>' + '</td>');
-                        tbody.append(tr);
-                    });
-                }
-            })
-            
-        }
-    })
-</script>
 {% endblock %}

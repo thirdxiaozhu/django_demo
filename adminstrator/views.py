@@ -589,3 +589,8 @@ def filremessage(request):
         'startdate':startdate,
         'enddate':enddate,
         })
+
+
+
+def institute(request):
+    return render(request, "eas/admin/admin_institute.html")

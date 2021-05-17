@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from student import models
 from adminstrator import models as adm_mod
 from django.http import HttpResponseRedirect
+from django.db.models import Q
+import datetime
 
 # Create your views here.
 
@@ -43,5 +45,34 @@ def changepwd(request):
     
 def sendbox(request):
     student = adm_mod.StudentInfo.objects.get(stu_id=request.session.get('userid'))
-    messages = adm_mod.Message.objects.filter(student_id = student.id).order_by('-isFinished')
+    messages = adm_mod.Message.objects.filter(student_id = student.id).order_by('-isFinished','-gettime')
     return render(request, "eas/student/student_sendbox.html",{'messages':messages})
+
+
+def filmessage(request):
+    startdate = request.POST.get("startdate")
+    enddate = request.POST.get("enddate")
+    student = adm_mod.StudentInfo.objects.get(stu_id=request.session.get('userid'))
+    #传入的enddate是指向该日期的00：00：00,如果要按照常规逻辑需要把该字符串日期转换成日期格式并+1
+    #通过保存一个备份，最后再返回一个备份过的enddate值，这样就能在前端正常显示了
+    enddate_backup = enddate
+    if startdate == "" and enddate == "":
+        remessages = adm_mod.Message.objects.filter(
+            Q(student_id=student.id) & Q(fromwho="student")).order_by('-isFinished','-gettime')
+    elif startdate == "":
+        enddate = datetime.datetime.strptime(enddate,'%Y-%m-%d') + datetime.timedelta(days=1)
+        remessages = adm_mod.Message.objects.filter(Q(student_id=student.id) & Q(fromwho="student") & Q(gettime__lte=enddate)).order_by('-isFinished','-gettime')
+        enddate = enddate_backup
+    elif enddate == "":
+        remessages = adm_mod.Message.objects.filter(Q(student_id=student.id) & Q(fromwho="student") & Q(gettime__gte=startdate)).order_by('-isFinished','-gettime')
+        print(remessages)
+    else:
+        enddate = datetime.datetime.strptime(enddate,'%Y-%m-%d') + datetime.timedelta(days=1)
+        remessages = adm_mod.Message.objects.filter(Q(student_id = student.id) & Q(fromwho="student") & Q(gettime__gte=startdate) & Q(gettime__lte=enddate)).order_by('-isFinished','-gettime')
+        enddate = enddate_backup
+
+    return render(request, "eas/student/student_sendbox.html", {
+        'messages': remessages,
+        'startdate':startdate,
+        'enddate':enddate,
+        })

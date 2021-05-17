@@ -8,4 +8,5 @@ urlpatterns = [
     path('showstatu/',views.showstatu),
     path('changepwd/',views.changepwd),
     path('sendbox/',views.sendbox),
+    path('filmessage/',views.filmessage),
 ]

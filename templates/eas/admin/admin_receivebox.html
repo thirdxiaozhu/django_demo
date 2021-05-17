@@ -69,6 +69,9 @@
                 <td class="text-danger"> 否 </td>
                 <td> - </td>
                 <td> - </td>
+                <td>
+                    <a class="btn btn-success" href="/student/handel_message/?id={{ message.id }}">进入处理</a>
+                </td>
             {% else %} 
                 <td class="text-success"> 是 </td>
                 {% if message.result == "驳回"%}
@@ -77,15 +80,9 @@
                     <td class="text-success">{{ message.result }}</td>
                 {% endif %}
                 <td> {{ message.finishtime }} </td>
-            {% endif %} 
-            {% if message.isFinished == 0 %}
-               <td>
-                   <a class="btn btn-success" href="/student/handel_message/?id={{ message.id }}">进入处理</a>
-               </td>
-            {% else %} 
-               <td>
-                   <a class="btn btn-info" href="/student/handel_message/?id={{ message.id }}">查看详情</a>
-               </td>
+                <td>
+                    <a class="btn btn-info" href="/student/handel_message/?id={{ message.id }}">查看详情</a>
+                </td>
             {% endif %} 
         </tr>
         {% endfor %}

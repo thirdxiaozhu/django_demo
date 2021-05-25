@@ -10,95 +10,323 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     {% include 'eas/component/panel_title.html' with title='学校机构管理' %}
 </div>
-<div class="container mt-5">
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="col-md-4">
-            <h2>单位管理</h2>
-            <p>管理教学单位信息</p>
-            <p><a class="btn btn-secondary col-md-4" href="/admin/status/" role="button">进入 &raquo;</a></p>
+
+<div class="accordion" id="accordionExample">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    可招生学院增加
+                </button>
+            </h2>
         </div>
-        <div class="col-md-4">
-            <h2>专业管理</h2>
-            <p>管理专业信息</p>
-            <p><a class="btn btn-secondary col-md-4" href="/admin/teacherlist/" role="button">进入 &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>班级管理</h2>
-            <p>管理班级信息</p>
-            <p><a class="btn btn-secondary col-md-4" href="/admin/courselist/" role="button">进入 &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>场地管理</h2>
-            <p>管理教学场地信息</p>
-            <p><a class="btn btn-secondary col-md-4" href="#" role="button">进入 &raquo;</a></p>
+
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="m-2 p-2">
+                <h4 id="coladd">可招生学院增加</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院编号</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="col_add_id">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="col_add_name">
+                    </div>
+                </div>
+                <button class="btn btn-success col-md-4" id="col_add_btn">确定</button>
+            </div>
         </div>
     </div>
-    <hr>
-</div> <!-- /container -->
+
+    <div class="card">
+        <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    可招生学院删除
+                </button>
+            </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class=" m-2 p-2">
+                <h4 id="coldel">可招生学院删除</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院名称</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="col_del_name" class="form-control collegename" name="college">
+                            <option>请选择学院</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-danger col-md-4" id="col_del_btn">删除</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header" id="headingThree">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    不可招生学院增加
+                </button>
+            </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            <div class=" m-2 p-2">
+                <h4 id="col4tcadd">不可招生学院增加</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院编号</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="col4tc_add_id">
+                    </div>
+                    <div class="col-sm-2" id="stuidlabel">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="col4tc_add_name">
+                    </div>
+                    <div class="col-sm-2" id="stuidlabel">
+                    </div>
+                </div>
+                <button class="btn btn-success col-md-4" id="col4tc_add_btn">确定</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingFour">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    不可招生学院删除
+                </button>
+            </h2>
+        </div>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+            <div class="m-2 p-2">
+                <h4 id="col4tcdel">不可招生学院删除</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院名称</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="col4tc_del_name" class="form-control college4tcname" name="college">
+                            <option>请选择学院</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2" id="stuidlabel">
+                    </div>
+                </div>
+                <button class="btn btn-danger col-md-4" id="col4tc_del_btn">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingFive">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    专业增加
+                </button>
+            </h2>
+        </div>
+        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+            <div class=" m-2 p-2">
+                <h4 id="majadd">专业增加</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="maj_add_col" class="form-control collegename">
+                            <option>请选择所属学院</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">专业编号</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="maj_add_id">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">专业名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="maj_add_name">
+                    </div>
+                </div>
+                <button class="btn btn-success col-md-4" id="maj_add_btn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingSix">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    专业删除
+                </button>
+            </h2>
+        </div>
+        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+            <div class="m-2 p-2">
+                <h4 id="col4tcdel">专业删除</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="maj_del_col" class="form-control collegename mc_del_col">
+                            <option>请选择所属学院</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">专业</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="maj_del_maj" class="form-control mc_del_maj">
+                            <option>请选择专业</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-danger col-md-4" id="maj_del_btn">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingSeven">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                    班级增加
+                </button>
+            </h2>
+        </div>
+        <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
+            <div class=" m-2 p-2">
+                <h4 id="majadd">班级增加</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">所属学院</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="cla_add_col" class="form-control collegename mc_del_col">
+                            <option>请选择所属学院</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">所属专业</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="cla_add_maj" class="form-control mc_del_maj">
+                            <option>请选择所属专业</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">班级编号</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="cla_add_id">
+                    </div>
+                </div>
+                <button class="btn btn-success col-md-4" id="cla_add_btn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingEight">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed coll" type="button" data-toggle="collapse"
+                    data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                    班级删除
+                </button>
+            </h2>
+        </div>
+        <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
+            <div class="m-2 p-2">
+                <h4 id="col4tcdel">班级删除</h4>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">学院</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="cla_del_col" class="form-control collegename mc_del_col">
+                            <option>请选择所属学院</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">专业</label>
+                    <div class="form-group col-md-6">
+                        <select name="college" id="cla_del_maj" class="form-control mc_del_maj">
+                            <option>请选择所属专业</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputCouid" class="col-sm-2 col-form-label">班级</label>
+                    <div class="form-group col-md-6">
+                        <select name="class" id="cla_del_cla" class="form-control">
+                            <option>请选择班级</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-danger col-md-4" id="cla_del_btn">删除</button>
+            </div>
+        </div>
+    </div>
+    <input style="display: none" id="colid">
+</div>
 {% endblock %}
 
 {% block js %}
 <script src="/static/js/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.15.0/esm/popper.min.js"></script>
-<script src="/static/gijgo/js/gijgo.min.js"></script>
-<script src="/static/gijgo/js/messages/messages.zh-cn.min.js"></script>
-<script>
-    $("#birthday").datepicker({
-        locale: 'zh-cn',
-        format: 'yyyy-mm-dd',
-        weekStartDay: 1
-    });
-    $("#entryTime").datepicker({
-        locale: 'zh-cn',
-        format: 'yyyy-mm-dd',
-        weekStartDay: 1
-    });
-</script>
+
 <script src="/static/js/setupajax.js"></script>
 <script>
     $(function () {
-
-        $("#changepwd").on("click", function () {
-            $.ajax({
-                url: '/student/changepwd/',
-                type: 'get',
-                success: function (data) {
-                    alert(data);
-                }
-            })            
-        })
-
-
         // 获取学院
         $.get('/admin/getCollege/', function (data) {
             for (var i = 0, len = data.colleges.length; i < len; i++) {
                 $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
-                $("#inputCollege").append($new);
+                $(".collegename").append($new);
+            }
+        });
+        $.get('/admin/getTeacherCollege/', function (data) {
+            for (var i = 0, len = data.colleges.length; i < len; i++) {
+                $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
+                $(".college4tcname").append($new);
             }
         });
 
+        $(".coll").on("click",function () {
+            $(".mc_del_maj").empty().append('<option value="">请选择专业</option>');
+            $("#cla_del_cla").empty().append('<option value="">请选择班级</option>');
+        });
 
         //改变学院后
-        $("#inputCollege").change(function () {
+        $(".mc_del_col").change(function () {
             //清空专业和班级
-            $("#inputMajor").empty().append('<option value="">请选择专业</option>');
-            $("#inputClass").empty().append('<option value="">请选择班级</option>');
+            $(".mc_del_maj").empty().append('<option value="">请选择专业</option>');
+            $("#maj_del_col").val($(".mc_del_col").val());
             $.ajax({
                 url: '/admin/getMajor/',
                 type: 'get',
-
-                data: { "college_id": $(this).val() }
+                data: { "college_id": $("#maj_del_col").val() }
             }).done(function (data) {
                 for (var i = 0, len = data.majors.length; i < len; i++) {
                     $new = $("<option value=" + data.majors[i][0] + ">" + data.majors[i][1] + "</option>");
-                    $("#inputMajor").append($new);
+                    $(".mc_del_maj").append($new);
                 }
             });
         });
 
         //改变专业后
-        $("#inputMajor").change(function () {
+        $(".mc_del_maj").change(function () {
             //清空班级
             $("#inputClass").empty().append('<option value="">请选择班级</option>');
             $.ajax({
@@ -113,72 +341,22 @@
             });
         });
 
-        $("#inputClass").change(function () {
-            var college_id = $("#inputCollege").val();
-            var major_id = $("#inputMajor").val();
-            var class_id = $("#inputClass").val();
+/*         $("#maj_del_cou").change(function () {
+            //清空专业和班级
+            $("#maj_del_maj").empty().append('<option value="">请选择专业</option>');
+            $("#inputClass").empty().append('<option value="">请选择班级</option>');
             $.ajax({
-                url: '/admin/showstudents/',
+                url: '/admin/getMajor/',
                 type: 'get',
-                data: { "college_id": college_id, "major_id": major_id, "class_id": class_id },
-                success: function (data) {
-                    var obj = eval(data);
-                    var tbody = $('#body');
-                    $(obj).each(function (index) {
-                        var val = obj[index];
-                        var count = index + 1
-                        //alert(val.name);
-                        var tr = $('<tr></tr>');
-                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
-                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
-                        tbody.append(tr);
-                    });
-                }
-            })
-            $('#student_table tbody').html('');
-        })
-        // 获取国家
-        $.get('/admin/getCountry/', function (data) {
-            for (var i = 0, len = data.countries.length; i < len; i++) {
-                $new = $("<option value=" + data.countries[i][0] + ">" + data.countries[i][1] + "</option>");
-                $("#inputCountry").append($new);
-            }
-        });
-
-
-        //改变省份后
-        $("#inputCountry").change(function () {
-            //清空市和区
-            $("#inputProvince").empty().append('<option value="">请选择省份</option>');
-            $("#inputCity").empty().append('<option value="">请选择城市</option>');
-            $.ajax({
-                url: '/admin/getProvince/',
-                type: 'get',
-
-                data: { "country_id": $(this).val() },
+                data: { "college_id": $(this).val() }
             }).done(function (data) {
-                for (var i = 0, len = data.provinces.length; i < len; i++) {
-                    $new = $("<option value=" + data.provinces[i][0] + ">" + data.provinces[i][1] + "</option>");
-                    $("#inputProvince").append($new);
+                for (var i = 0, len = data.majors.length; i < len; i++) {
+                    $new = $("<option value=" + data.majors[i][0] + ">" + data.majors[i][1] + "</option>");
+                    $("#inputMajor").append($new);
                 }
             });
-        });
-
-        //改变城市后
-        $("#inputProvince").change(function () {
-            //清空市和区
-            $("#inputCity").empty().append('<option value="">请选择城市</option>');
-            $.ajax({
-                url: '/admin/getCity/',
-                type: 'get',
-                data: { "province_id": $(this).val() }
-            }).done(function (data) {
-                for (var i = 0, len = data.cities.length; i < len; i++) {
-                    $new = $("<option value=" + data.cities[i][0] + ">" + data.cities[i][1] + "</option>");
-                    $("#inputCity").append($new);
-                }
-            });
-        });
+        }); */
+        
         
         $("#stuid").blur(function() {
             $('#stuidlabel').html('');

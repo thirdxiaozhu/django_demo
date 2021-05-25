@@ -83,6 +83,7 @@ def getTeacherCollege(request):
 
 def getMajor(request):
     collegeid = request.GET.get('college_id')
+    print("aaaaaaaaaaaaaaaa" + collegeid)
     majors = models.MajorInfo.objects.filter(college_id=collegeid)
     res = []
     for i in majors:
@@ -513,7 +514,6 @@ def getteacou(request):
     for cou in course:
         res.append(cou.id)
         print(cou.id)
-    print("aaaaaaaaaa")
     return JsonResponse(res, safe=False)
 
 
@@ -594,3 +594,96 @@ def filremessage(request):
 
 def institute(request):
     return render(request, "eas/admin/admin_institute.html")
+
+
+def searchcourse(request):
+    content = request.GET.get('content')
+
+
+    if content == "":
+        courses = models.Course.objects.filter(id__gt = 0)
+    else:
+        courses = models.Course.objects.filter(
+            Q(cou_id=content) | Q(name=content))
+
+    res = []
+    for i in courses:
+        #res.append([i.stu_id, i.name]) #键值对传Json
+        if i.elective == True :
+            temp = "是"
+        else:
+            temp = "否"
+        data = {
+            'cou_id': i.cou_id,
+            'name': i.name,
+            'classhour': i.classhour,
+            'college': i.college.name,
+            'function' : i.function.name,
+            'iselective': temp
+        }
+        res.append(data)  # 列表存储字典，并转换成Json格式
+    return JsonResponse(res, safe=False)
+
+
+def edit_course(request):
+    if request.method == "POST":
+        edit_id = request.POST.get("id")
+        new_couid = request.POST.get("cou_id")
+        new_name = request.POST.get("name")
+        new_classhour = request.POST.get("classhour")
+        new_hourperweek = request.POST.get("hourperweek")
+        new_credit = request.POST.get("credit")
+        new_betyear = request.POST.get("betyear")
+        new_college = request.POST.get("college")
+        new_function = request.POST.get("function")
+        new_elective = request.POST.get("elective")
+        print(new_elective)
+
+
+        edit_course = models.Course.objects.get(id=edit_id)
+        edit_course.cou_id = new_couid
+        edit_course.name = new_name
+        edit_course.classhour = new_classhour
+        edit_course.hourperweek = new_hourperweek
+        edit_course.credit = new_credit
+        edit_course.betyear = new_betyear
+        edit_course.college_id = new_college
+        edit_course.function_id = new_function
+        edit_course.elective = new_elective
+        edit_course.save()
+        return redirect("/admin/courselist/")
+    cou_id = request.GET.get("id")
+    course = models.Course.objects.get(id = cou_id)
+    colleges = models.CollegeInfo.objects.all()
+    functions = models.Function.objects.all()
+    return render(request , "eas/admin/edit_course.html", {
+        "cou" : course,
+        "colleges" : colleges,
+        "functions" : functions,
+        })
+
+
+
+def add_course(request):
+    if request.method == "POST":
+        new_couid = request.POST.get("cou_id")
+        new_name = request.POST.get("name")
+        new_classhour = request.POST.get("classhour")
+        new_hourperweek = request.POST.get("hourperweek")
+        new_credit = request.POST.get("credit")
+        new_betyear = request.POST.get("betyear")
+        new_college = request.POST.get("college")
+        new_function = request.POST.get("function")
+        new_elective = request.POST.get("elective")
+
+        models.Course.objects.create(
+            cou_id=new_couid, name=new_name, classhour=new_classhour, hourperweek=new_hourperweek,
+            credit = new_credit , betyear = new_betyear , college_id = new_college, function_id = new_function,
+            elective = new_elective)
+        return redirect("/admin/add_course/")
+    colleges = models.CollegeInfo.objects.all()
+    functions = models.Function.objects.all()
+    return render(request, "eas/admin/add_course.html",{
+        "colleges":colleges,
+        "functions": functions,
+    })

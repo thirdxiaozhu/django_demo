@@ -1,0 +1,289 @@
+{% extends 'eas/motherbase.html' %}
+
+{% block head %}
+<link href="https://cdn.bootcss.com/gijgo/1.9.13/combined/css/gijgo.min.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block page-main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">正在添加课程信息</h1>
+    <div class="btn-group mr-2">
+        <a class="btn btn-info pull_right rounded-pill" href="/admin/courselist/">返回</a>
+    </div>
+</div>
+
+<form action="/admin/add_course/" method="post">
+    {% csrf_token %}
+    <input type="text" style="display: none" name="id" value="">
+    <div class="form-group row">
+        <label for="inputCouid" class="col-sm-2 col-form-label">课程号</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="cou_id" name="cou_id" value="">
+        </div>
+        <div class="col-sm-2" id="stuidlabel">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputName" class="col-sm-2 col-form-label">课程名</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="name" name="name" value="">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputClasshour" class="col-sm-2 col-form-label">总学时</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="inputClasshour" name="classhour" value="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputHourperweek" class="col-sm-2 col-form-label">周学时</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="inputHourperweek" name="hourperweek" value="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputCredit" class="col-sm-2 col-form-label">学分</label>
+        <div class="col-sm-6">
+            <input id="credit" class="form-control" name="credit" value="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputBetyear" class="col-sm-2 col-form-label">建议修读学年</label>
+        <div class="col-sm-6">
+            <input id="betyear" class="form-control" name="betyear" value="">
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="inputCollege" class="col-sm-2 col-form-label">开课学院</label>
+        <div class="col-sm-6">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                <div class="form-group col-md-6">
+                    <select name="college" id="inputCollege" class="form-control" name="college">
+                        <option>请选择开课学院</option>
+                        {% for college in colleges %}
+                            <option value="{{ college.id }}">{{ college.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputFunction" class="col-sm-2 col-form-label">课程类型</label>
+        <div class="col-sm-6">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center ">
+                <div class="form-group col-md-6">
+                    <select name="function" id="inputFunction" class="form-control" name="function">
+                        <option>请选择课程类型</option>
+                        {% for function in functions %}
+                            <option value="{{ function.id }}">{{ function.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <fieldset class="form-group">
+        <div class="row">
+            <legend class="col-form-label col-sm-2">是否选修:</legend>
+            <div class="col-sm-10">
+                <div class="form-check-label">
+                    <label>
+                        <input name="elective" type="radio" value="1"> 是
+                    </label>
+                    <label class="ml-5">
+                        <input name="elective" type="radio" value="0" > 否
+                    </label>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <button id="submit" type="submit" class="btn btn-success col-sm-6">保存</button>
+        </div>
+    </div>
+
+
+</form>
+
+<!-- 删除模态框 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="exampleModalLabel">请注意！</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="modal-title text-danger" id="exampleModalLabel">删除过程不可逆！请再次确认是否删除!</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <a  class="btn btn-danger" href="/admin/delete_student/?id={{stu.stu_id}}">确定</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.15.0/esm/popper.min.js"></script>
+
+<script src="/static/js/setupajax.js"></script>
+<script>
+    $(function () {
+
+        // 获取学院
+/*         $.get('/admin/getCollege/', function (data) {
+            for (var i = 0, len = data.colleges.length; i < len; i++) {
+                $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
+                $("#inputCollege").append($new);
+            }
+        }); */
+        //当学院标签获取焦点时
+        $("#inputCollege").focus(function(){
+            $("#inputCollege").empty().append('<option value="">请选择学院</option>');
+            $("#inputMajor").empty().append('<option value="">请选择专业</option>');
+            $("#inputClass").empty().append('<option value="">请选择班级</option>');
+            $.ajax({
+                url: '/admin/getCollege/',
+                type: 'get',
+            }).done(function (data) {
+                for (var i = 0, len = data.colleges.length; i < len; i++) {
+                    $new = $("<option value=" + data.colleges[i][0] + ">" + data.colleges[i][1] + "</option>");
+                    $("#inputCollege").append($new);
+                }
+            });
+        })
+
+
+        
+
+        //改变专业后
+        $("#inputMajor").change(function () {
+            //清空班级
+            $("#inputClass").empty().append('<option value="">请选择班级</option>');
+            $.ajax({
+                url: '/admin/getClass/',
+                type: 'get',
+                data: { "major_id": $(this).val() }
+            }).done(function (data) {
+                for (var i = 0, len = data.classes.length; i < len; i++) {
+                    $new = $("<option value=" + data.classes[i][0] + ">" + data.classes[i][1] + "</option>");
+                    $("#inputClass").append($new);
+                }
+            });
+        });
+
+        $("#inputClass").change(function () {
+            var college_id = $("#inputCollege").val();
+            var major_id = $("#inputMajor").val();
+            var class_id = $("#inputClass").val();
+            $.ajax({
+                url: '/admin/showstudents/',
+                type: 'get',
+                data: { "college_id": college_id, "major_id": major_id, "class_id": class_id },
+                success: function (data) {
+                    var obj = eval(data);
+                    var tbody = $('#body');
+                    $(obj).each(function (index) {
+                        var val = obj[index];
+                        var count = index + 1
+                        //alert(val.name);
+                        var tr = $('<tr></tr>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
+                        tbody.append(tr);
+                    });
+                }
+            })
+            $('#student_table tbody').html('');
+        })
+        // 获取国家
+/*         $.get('/admin/getCountry/', function (data) {
+            for (var i = 0, len = data.countries.length; i < len; i++) {
+                $new = $("<option value=" + data.countries[i][0] + ">" + data.countries[i][1] + "</option>");
+                $("#inputCountry").append($new);
+            }
+        }); */
+
+        $("#inputCountry").focus(function(){
+            $("#inputCountry").empty().append('<option value="">请选择国籍</option>');
+            $("#inputProvince").empty().append('<option value="">请选择省份</option>');
+            $("#inputCity").empty().append('<option value="">请选择城市</option>');
+            $.ajax({
+                url: '/admin/getCountry/',
+                type: 'get',
+            }).done(function (data) {
+                for (var i = 0, len = data.countries.length; i < len; i++) {
+                    $new = $("<option value=" + data.countries[i][0] + ">" + data.countries[i][1] + "</option>");
+                    $("#inputCountry").append($new);
+                }
+            });
+        })
+
+
+        //改变省份后
+        $("#inputCountry").change(function () {
+            //清空市和区
+            $("#inputProvince").empty().append('<option value="">请选择省份</option>');
+            $("#inputCity").empty().append('<option value="">请选择城市</option>');
+            $.ajax({
+                url: '/admin/getProvince/',
+                type: 'get',
+
+                data: { "country_id": $(this).val() },
+            }).done(function (data) {
+                for (var i = 0, len = data.provinces.length; i < len; i++) {
+                    $new = $("<option value=" + data.provinces[i][0] + ">" + data.provinces[i][1] + "</option>");
+                    $("#inputProvince").append($new);
+                }
+            });
+        });
+
+        //改变城市后
+        $("#inputProvince").change(function () {
+            //清空市和区
+            $("#inputCity").empty().append('<option value="">请选择城市</option>');
+            $.ajax({
+                url: '/admin/getCity/',
+                type: 'get',
+                data: { "province_id": $(this).val() }
+            }).done(function (data) {
+                for (var i = 0, len = data.cities.length; i < len; i++) {
+                    $new = $("<option value=" + data.cities[i][0] + ">" + data.cities[i][1] + "</option>");
+                    $("#inputCity").append($new);
+                }
+            });
+        });
+        
+        $("#stuid").blur(function() {
+            $('#stuidlabel').html('');
+            $.ajax({
+                url: '/admin/judgename',
+                type: 'get',
+                data: {"stu_id": $(this).val()},
+                success: function (params) {
+                    $new = $("<label class='col-form-label  text-danger'>" + params + "</label>");
+                    $('#stuidlabel').append($new);
+                }
+            })
+        });
+
+    })
+</script>
+{% endblock %}

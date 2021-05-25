@@ -13,7 +13,7 @@
             </div>
             <div id="btn">
             </div>
-            <a class="btn btn-success pull_right rounded-pill" href="/admin/add_teacher/">新增</a>
+            <a class="btn btn-success pull_right rounded-pill" href="/admin/add_course/">新增</a>
 <!--             <a class="btn btn-success pull_right rounded-pill" href="/add_book/">新增</a>-->
         </div>
         </button>
@@ -68,9 +68,9 @@
             <td>{{ course.classhour }}</td>
             <td>{{ course.college.name }}</td>
             <td>{{ course.function.name }}</td>
-            <td>{% if course.elective == False%} 否 {% endif %}</td>
+            <td>{% if course.elective == False%} 否 {% else %} 是 {% endif %}</td>
             <td>
-                <a class="btn btn-info" href="/admin/edit_teacher/?id={{ teacher.id }}">编辑</a>
+                <a class="btn btn-info" href="/admin/edit_course/?id={{ course.id }}">编辑</a>
             </td>
         </tr>
         {% endfor %}
@@ -181,7 +181,7 @@
         $("#searchbtn").on("click", function () {
             var content = $("#search").val();
             $.ajax({
-                url: '/admin/searchstatu/',
+                url: '/admin/searchcourse/',
                 type: 'get',
                 data: { "content": content },
                 success: function (data) {
@@ -193,8 +193,8 @@
                         var count = index + 1;
                         //alert(val.name);
                         var tr = $('<tr></tr>');
-                        tr.append('<td>' + count + '</td>' + '<td>' + val.stu_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.class + '</td>' + '<td>' + val.sex + '</td>');
-                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_student/?id=' + val.stu_id + '">编辑</a>' + '</td>');
+                        tr.append('<td>' + count + '</td>' + '<td>' + val.cou_id + '</td>' + '<td>' + val.name + '</td>' + '<td>' + val.classhour + '</td>' + '<td>' + val.college + '</td>' + '<td>' + val.function + '</td>' + '<td>' + val.iselective + '</td>');
+                        tr.append('<td>' + '<a class="btn btn-info" href="/admin/edit_course/?id=' + val.cou_id + '">编辑</a>' + '</td>');
                         tbody.append(tr);
                     });
                 }
